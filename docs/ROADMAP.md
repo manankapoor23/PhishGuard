@@ -11,6 +11,7 @@
 | 6 | Explainability: SHAP for trees, character attributions for deep models | ✅ | 10 | [06](guide/06_explainability.md) |
 | 7 | Robustness: original vs modified phishing URLs, model not retrained | ✅ | 11 | [07](guide/07_robustness.md) |
 | 8 | Project website: link checker with explanations and honest warnings | ✅ | – | [08](guide/08_website.md) |
+| 7b | Better training data: does it fix the real-world failures? (lab GPU) | ✅ | 12 | [09](guide/09_better_data.md) |
 | 9 | Report and slides | next | | |
 
 ## Headline results (test accuracy, mean ± sd over 5 site-owner splits)
@@ -65,3 +66,8 @@ The README table is generated from `results/` (`python -m phishguard.report`), a
 - It checks a link with the hybrid and the n-gram model, crosses out what the models ignore, shades each letter by its effect, lists the features that moved the hybrid, and warns when one of our measured weak spots applies.
 - "What we found" tells the project's story with numbers read from `results/` and recomputed from the saved models.
 - Found: every `google.com` row in PhiUSIIL is labelled phishing (Docs/Sites-hosted phishing). That explains part of the `accounts.google.com` false alarm.
+
+## Milestone 7b outcome (D18)
+- Retrained n-grams and the hybrid with real legitimate sites (Tranco), legitimate subdomains, fresh phishing (Phishing.Database) and edited phishing; tested on site owners never seen in training, including 2025–26 PhishTank phishing.
+- False alarms on real sites fall by a quarter to a half on every split (hybrid, Tranco: 18% → 10%; sites with a subdomain: 77% → 63%); edited phishing is caught more often; PhiUSIIL accuracy drops ~1 point; new phishing is caught as before (~81%).
+- `mail.` got worse for the hybrid (86% → 92% false alarms), because the added phishing contains many `mail.` domains and no legitimate ones: data fixes a bias only where it holds counter-examples.

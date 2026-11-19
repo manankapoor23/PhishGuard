@@ -241,6 +241,33 @@ Add yours in the same format and link the evidence. This file becomes the
 - **On the website:** shown in its own box, which says that it is a rule, not machine learning, and gives the two numbers above. The ML results in this log never include it.
 - **Evidence:** `src/phishguard/lookalike.py`, `tests/test_lookalike.py`, `phishguard.serving.build`.
 
+## D18 · Milestone 7b: retrain with more realistic data, test on owners never seen in training
+- **Question:** Milestone 7 blamed the data for the real-world failures. If that's right, better training data should shrink them. We tested it instead of assuming it.
+- **Training additions ("PhiUSIIL + fixes"), `phishguard.datafix`:**
+  1. legitimate: a fixed half of the Tranco top 20k (hash of the site owner, so it never changes), owners in PhiUSIIL removed;
+  2. legitimate subdomains: copies of 25% of legitimate training domains with a prefix from `TRAIN_PREFIXES` (`app`, `docs`, `help` …), **disjoint** from the tested prefixes (`mail`, `blog`, `login` …; a test checks this);
+  3. phishing: 25,000 Phishing.Database domains, **one per site owner** (hosting owners like `weeblysite.com` have thousands);
+  4. edited phishing: copies of 25% of phishing training domains with one Milestone 7 edit.
+
+  Each addition is split 85/15 into train and validation by owner. Settings and threshold are chosen on validation as always (D6).
+- **Tests, none sharing a site owner with any training data (checked: 0 overlap):** PhiUSIIL's test split; CrUX plain domains (3,851) and CrUX with a subdomain (1,448); the other Tranco half (8,330); PhishTank phishing submitted from 2025-01-01 (7,518 domains); and the M7 attacks (every edit; `mail.` on legitimate domains). External feeds are frozen snapshots from 2026-11-19 (`DataSets/external/README.md`).
+- **Compute:** n-grams on the Mac CPU (~8 min); the hybrid on the lab H100 GPU (~25 min, about 30 s per model). `pick_device()` now prefers CUDA.
+- **Results** (mean over 5 splits, before → after; "5/5" = better on every split):
+
+  | | n-grams | hybrid |
+  |---|---|---|
+  | PhiUSIIL accuracy | 86.3 → 85.7% | 86.8 → 85.7% |
+  | False alarms, CrUX with a subdomain | 53.4 → 38.7% (5/5) | 76.8 → 62.8% (5/5) |
+  | False alarms, Tranco test half | 25.4 → 15.7% (5/5) | 18.0 → 9.8% (5/5) |
+  | False alarms, CrUX plain | 22.2 → 17.2% (4/5) | 15.8 → 12.0% (5/5) |
+  | New PhishTank phishing caught | 82.1 → 81.3% | 81.7 → 81.4% |
+  | Edited phishing caught | 30.6 → 38.7% (5/5) | 19.9 → 27.4% (5/5) |
+  | False alarms, legitimate + `mail.` | 67.1 → 65.8% | **86.4 → 92.2% (worse, 5/5)** |
+- **Why `mail.` got worse:** in the fixed training set (seed 42), subdomains starting with `mail.` are 597 phishing vs 1 legitimate. The added phishing feed brought more of them, and our legitimate prefixes deliberately left `mail.` out. **Data reduces a bias only where it holds counter-examples.**
+- **Interpretation:** better data consistently cuts real-world false alarms (by a quarter to a half) and evasion, for about 1 point of PhiUSIIL accuracy, with no loss on new phishing. It's a partial fix: false alarms on sites with a subdomain stay at 39–63%. This supports the thesis that the limit is the data.
+- **Limits:** the legitimate additions are popular sites only; Phishing.Database labels are at domain level and include some shared hosts; the subdomain prefixes are synthetic.
+- **Evidence:** `src/phishguard/datafix.py`, `tests/test_datafix.py`, `results/m7b/*.json`, `notebooks/12_better_data.ipynb`.
+
 ## Reporting protocol from Milestone 4 on (fixed in advance)
 To avoid choosing what to report after seeing test results, every new model reports exactly this, and nothing is dropped if it looks bad:
 - **raw URL, domain only, registered domain** views (D10)

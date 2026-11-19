@@ -14,6 +14,7 @@
 | 6 | Explainability (SHAP, character attributions) | ✅ Done |
 | 7 | Robustness: original vs modified URLs, popular real websites | ✅ Done |
 | 8 | Project website: link checker with explanations and warnings | ✅ Done |
+| 7b | Better training data, tested on unseen real sites and 2025–26 phishing | ✅ Done |
 | 9 | Report and slides | ⏳ Next |
 
 Details: [`docs/ROADMAP.md`](docs/ROADMAP.md).

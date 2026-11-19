@@ -16,5 +16,6 @@ Run them in this order. Each one is saved with its outputs, so you can also just
 | `09_hybrid` | 5 | Hybrid network (char-CNN + 40 URL features) and log-odds average (CNN + XGBoost), vs n-gram and CNN (~1.5 h) |
 | `10_explainability` | 6 | SHAP for XGBoost, permutation importance and character occlusion for the hybrid, deletion test; saves `models/hybrid_domain_only.pt` (~15 min) |
 | `11_robustness` | 7 | Saved models vs edited URLs (evasion) and vs popular real websites from CrUX/Tranco (false alarms), no retraining (~10 min) |
+| `12_better_data` | 7b | Reads `results/m7b/`: before/after better training data, both models, per-split consistency, why `mail.` got worse (~1 min; the training runs via `python -m phishguard.datafix`) |
 
 Every model runs on 5 site-owner splits (seeds 42, 0, 1, 2, 3) and reports mean ± sd (D11). Results are saved in `results/<milestone>/`. Running everything takes roughly four to five hours on a laptop; notebooks 08, 09 and 03 are the slowest.
