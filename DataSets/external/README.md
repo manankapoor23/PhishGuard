@@ -28,3 +28,12 @@ Fresh phishing from outside PhiUSIIL, frozen on one day so results can be reprod
 | `openphish_feed_2026-11-19.txt` | [OpenPhish](https://openphish.com) community feed | 300 most recent phishing URLs | `17c99002a2099b3320fb9810b7465e26db6696428bbe01e8d5c47c1642adc197` |
 
 Downloaded 2026-11-19; compressed with `gzip -n -9`. PhishTank and OpenPhish data are provided for research use; cite the sources.
+
+## Less popular websites and an allowlist (notebook 13), from the same Tranco list GQ3QK
+
+The full 1M-domain list `GQ3QK` was downloaded on 2026-11-20 (SHA-256 of the full CSV: `edff8eb7a9633e250ed8323c6643fba9d7a8bad5f31e3aea1cabbeb04fc7c961`; its top 20k is identical to `tranco_GQ3QK_top20k.csv`). Two extracts are kept:
+
+| File | Content | SHA-256 |
+|---|---|---|
+| `tranco_GQ3QK_top100k.csv.gz` | ranks 1–100,000 (`rank,domain`), used as an allowlist of popular sites | `797540a6ee80a1c22c58dfc72ac60a6dc48ee1cb3aedaaf342e12c0b1621c580` |
+| `tranco_GQ3QK_rank100k-1M_sample20k.csv` | 20,000 domains sampled at random (`random_state=0`) from ranks 100,001–1,000,000: real but less popular sites | `933a4cfa1763a54850e76f162d1d3546311be7eed3f2d7eba1810f81f3807d86` |

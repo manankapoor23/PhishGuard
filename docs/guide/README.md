@@ -13,6 +13,7 @@ Read these in order. Each one explains one part of the project in plain words, s
 | 7 | [Robustness (Milestone 7)](07_robustness.md) | Edited phishing URLs, legitimate subdomains, and popular real websites outside the dataset |
 | 8 | [The website (Milestone 8)](08_website.md) | How the link checker works, where its numbers come from, and how to run it |
 | 9 | [Better data (Milestone 7b)](09_better_data.md) | Retraining with more realistic data, tested on unseen sites and new phishing |
+| 10 | [Extra checks](10_extra_checks.md) | Label audit, calibration, strict thresholds, less popular sites, allowlist |
 
 ## The project in one minute
 - **Problem:** given a URL, say whether it is phishing (a fake site that steals passwords or money) or legitimate.
@@ -29,6 +30,7 @@ Read these in order. Each one explains one part of the project in plain words, s
   9. Tested **robustness** without retraining. The raw-URL model is fooled just by switching to HTTPS. The domain-only models resist that, but cheap domain changes evade them, and on 25,000 popular real websites they flag 15–81% (depending on subdomains). The simple n-gram model copes best with edits and subdomains.
   10. Built the **project website**. You paste a link and it shows which part the model reads, how each letter pushed the score, and which of our measured weak spots apply. While building it we found that every `google.com` link in the dataset is labelled phishing.
   11. **Retrained with better data (7b)** on the lab GPU. False alarms on real sites fell by a quarter to a half for about 1 point of accuracy, but one bias (`mail.`) got worse, because the new data had no counter-examples.
+  12. **Extra checks:** 44 popular hosting services are labelled phishing in the data; the probabilities are honest only inside the dataset; ordinary websites get about 1 in 5 false alarms; an allowlist helps only the sites it lists.
 - **What's next:**
   - The report and slides.
 

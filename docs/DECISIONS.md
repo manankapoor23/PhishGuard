@@ -268,6 +268,24 @@ Add yours in the same format and link the evidence. This file becomes the
 - **Limits:** the legitimate additions are popular sites only; Phishing.Database labels are at domain level and include some shared hosts; the subdomain prefixes are synthetic.
 - **Evidence:** `src/phishguard/datafix.py`, `tests/test_datafix.py`, `results/m7b/*.json`, `notebooks/12_better_data.ipynb`.
 
+## D19 · Extra checks: label audit, calibration, strict thresholds, less popular sites, allowlist
+- **Why:** the questions after 7b were "is `google.com` a one-off?", "can we trust the probabilities?", "what would a real browser warning catch?", "what about ordinary (not popular) sites?" and "would an allowlist fix it?". Each is answered with existing models (`src/phishguard/audit.py`, tested; notebook 13).
+- **Label audit:** of 68 popular owners (Tranco top 20k) with ≥ 20 PhiUSIIL rows, **44 are mostly labelled phishing (6,932 rows)**: shared services such as `ipfs.io` (1,441), `google.com` (782), `godaddysites.com`, `weebly.com`, `windows.net`, `bit.ly`, `tinyurl.com`. The `google.com` finding (D16) is a pattern: a domain-only model can't separate honest and phishing pages on shared hosting.
+- **Calibration (seed-42 test, domain only):** expected calibration error ≈ 0.02 for the hybrid and n-grams, so probabilities are honest *inside* PhiUSIIL. On popular legitimate sites with a subdomain, the hybrid flags 80% and 77% of those flags have probability ≥ 0.9: confidently wrong under distribution shift.
+- **Strict thresholds** (chosen on validation, measured on test): at ≤ 1% false alarms the models catch 64% (hybrid) / 67% (n-grams) of phishing; at ≤ 0.1%, 51% / 54%. The usual "fewest mistakes" threshold catches ~75% with ~2.6% false alarms.
+- **Less popular sites:** 19,321 sites sampled from Tranco ranks 100k–1M (owners in PhiUSIIL removed): false alarms 18.3% (hybrid) and 23.9% (n-grams). The 7b-retrained n-grams: 23.2%, barely better, because 7b only added *popular* legitimate sites.
+- **Allowlist** (never flag an owner in the Tranco top N), in front of the hybrid:
+
+  | | none | top 10k | top 100k |
+  |---|---|---|---|
+  | False alarms, popular sites with a subdomain | 79.8% | 38.1% | 0.1% |
+  | False alarms, less popular sites | 18.3% | 18.3% | 18.3% |
+  | New phishing caught (PhishTank 2025+) | 82.1% | 81.7% | 77.3% |
+
+  It fixes only the sites it lists (and the popular-site test is partly circular), and it lets through phishing hosted on popular services (5.1% of new phishing owners are in the top 100k).
+- **Interpretation:** each check points the same way. Domain-only data can't carry the signal needed; a usable detector needs representative legitimate data (including ordinary sites) and signals beyond the domain.
+- **Data:** the full Tranco GQ3QK list (downloaded 2026-11-20); two extracts with checksums in `DataSets/external/README.md`.
+
 ## Reporting protocol from Milestone 4 on (fixed in advance)
 To avoid choosing what to report after seeing test results, every new model reports exactly this, and nothing is dropped if it looks bad:
 - **raw URL, domain only, registered domain** views (D10)
