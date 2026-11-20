@@ -15,7 +15,7 @@
 | 7 | Robustness: original vs modified URLs, popular real websites | ✅ Done |
 | 8 | Project website: link checker with explanations and warnings | ✅ Done |
 | 7b | Better training data, tested on unseen real sites and 2025–26 phishing | ✅ Done |
-| 9 | Final report ([`docs/report/REPORT.md`](docs/report/REPORT.md)) and slides | ✅ Report drafted; slides updated |
+| 9 | Final report ([simple](docs/report/REPORT.md), [detailed](docs/report/REPORT_detailed.md)) and slides | ✅ Drafted |
 
 Details: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
