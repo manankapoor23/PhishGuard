@@ -3,9 +3,11 @@
 Run:  .venv/bin/python -m phishguard.web     then open http://127.0.0.1:8000
 
 POST /api/check    {"url": "..."} -> what the models read, their scores and warnings (serving.Checker)
-GET  /api/numbers  accuracy over 5 splits (results/) and the robustness numbers (models/site_numbers.json)
+GET  /api/numbers  accuracy over 5 splits (results/), the robustness numbers (models/site_numbers.json)
+                   and the Milestone 7b before/after numbers (results/m7b/)
 """
 
+import json
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -13,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from phishguard.data import REPO_ROOT
-from phishguard.evaluate import load_results
+from phishguard.evaluate import RESULTS_DIR, load_results
 from phishguard.serving import Checker
 
 SITE_DIR = REPO_ROOT / "web"
@@ -58,7 +60,7 @@ def check(request: CheckRequest) -> dict:
 
 @app.get("/api/numbers")
 def numbers() -> dict:
-    return {"accuracy": accuracy_table(),
+    return {"accuracy": accuracy_table(), "better_data": better_data_table(),
             **{key: value for key, value in checker.numbers.items() if key != "suffix_priors"}}
 
 
@@ -72,6 +74,18 @@ def accuracy_table() -> list[dict]:
         rows.append({"model": label, "input": view, "accuracy": float(r["accuracy"]),
                      "sd": float(r["accuracy_sd"]), "roc_auc": float(r["roc_auc"])})
     return rows
+
+
+def better_data_table() -> dict:
+    """Milestone 7b: mean over 5 splits, before and after better training data (results/m7b/, D18)."""
+    out = {}
+    for model in ("hybrid", "ngram"):
+        for variant in ("phiusiil_only", "phiusiil_plus_fixes"):
+            path = RESULTS_DIR / "m7b" / f"{model}__{variant}.json"
+            if path.exists():
+                summary = json.loads(path.read_text())["summary"]
+                out.setdefault(model, {})[variant] = {key: value["mean"] for key, value in summary.items()}
+    return out
 
 
 app.mount("/", StaticFiles(directory=SITE_DIR, html=True), name="site")

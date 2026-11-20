@@ -245,9 +245,35 @@ function brandTable(examples) {
       call(r.ngram, examples.thresholds.ngram))))));
 }
 
+function betterDataTable(better) {
+  if (!better.hybrid || !better.ngram) return;
+  const rows = [
+    ["Accuracy on the original dataset", "phiusiil_accuracy", "higher"],
+    ["False alarms: popular sites with a subdomain", "crux_subdomain", "lower"],
+    ["False alarms: Tranco sites", "tranco_test", "lower"],
+    ["False alarms: legitimate site + mail.", "phiusiil_legit_plus_mail", "lower"],
+    ["New 2025–26 phishing caught", "phishtank_new", "higher"],
+    ["Edited phishing caught", "phiusiil_phish_all_edits", "higher"],
+  ];
+  const cell = (model, key, better_is) => {
+    const before = better[model].phiusiil_only[key], after = better[model].phiusiil_plus_fixes[key];
+    // colour only changes of a point or more; smaller ones are within split-to-split noise
+    const improved = better_is === "higher" ? after > before + 0.01 : after < before - 0.01;
+    const worse = better_is === "higher" ? after < before - 0.01 : after > before + 0.01;
+    return el("td", { class: `num ${improved ? "is-legit" : worse ? "is-phish" : ""}` }, `${pct(before, 1)} → ${pct(after, 1)}`);
+  };
+  document.querySelector("#better-data-table").replaceChildren(el("table", { class: "attacks" },
+    el("caption", {}, "Before → after better training data (mean of 5 splits; blue = better, red = worse by a point or more)"),
+    el("thead", {}, el("tr", {},
+      el("th", { scope: "col" }, "Measured"), el("th", { scope: "col" }, "Hybrid"), el("th", { scope: "col" }, "Character n-grams"))),
+    el("tbody", {}, rows.map(([label, key, better_is]) => el("tr", {},
+      el("th", { scope: "row" }, label), cell("hybrid", key, better_is), cell("ngram", key, better_is))))));
+}
+
 fetch("/api/numbers")
   .then((response) => response.json())
   .then((numbers) => {
+    betterDataTable(numbers.better_data);
     brandTable({ rows: numbers.brand_examples,
                  thresholds: { hybrid: numbers.models.hybrid.threshold, ngram: numbers.models.ngram.threshold } });
     accuracyChart(numbers.accuracy);

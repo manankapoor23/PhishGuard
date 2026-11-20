@@ -128,6 +128,23 @@
               <code>accounts.google.com</code>. Our <a href="https://github.com/AIShaurya777/PhishGuard/blob/main/docs/references.md">reference
               list</a> cites them.</p>
           </li>
+
+          <li class="step">
+            <h3>Better data helps, but only partly</h3>
+            <p>If the data is the cause, better data should help. So we retrained both models with real legitimate websites,
+              legitimate subdomains, newer phishing from another feed, and edited phishing. We tested them on websites that
+              share no owner with anything in training, and on phishing reported in 2025–26. The neural network trained on the
+              lab’s H100 GPU.</p>
+            <div id="better-data-table"></div>
+            <p>False alarms on real sites drop by a quarter to a half, on every one of five splits, for about one point of
+              accuracy on the original dataset. New phishing is caught as often as before. But it’s a partial fix: sites with
+              a subdomain still get many false alarms, and <code>mail.</code> got worse for the hybrid. The phishing we added
+              contains many <code>mail.</code> domains and the training data has no legitimate ones. Data removes a bias only
+              where it contains counter-examples.</p>
+            <p>Ordinary, less popular websites fare no better: about 1 in 5 is still flagged, because the legitimate sites we
+              added were all popular ones. A usable detector needs legitimate data that looks like the whole web, and signals
+              beyond the domain name, such as the page itself or the domain’s age.</p>
+          </li>
         </ol>
       </div>
     </section>
@@ -151,7 +168,8 @@
             <dd><strong>Hybrid:</strong> a character CNN reads the domain letter by letter, and its output is joined with
               40 measured properties such as length, hyphens and number of subdomains. <strong>Character n-grams:</strong>
               logistic regression on every 1 to 4 letter chunk. Both were trained on the same split and never retrained
-              for this site.</dd>
+              for this site. The better-data results above come from separate retraining runs (Milestone 7b); the
+              checker still uses the original models.</dd>
           </div>
           <div>
             <dt>Explanations</dt>

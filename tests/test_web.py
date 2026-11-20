@@ -60,4 +60,5 @@ def test_website_api():
         numbers = client.get("/api/numbers").json()
         assert len(numbers["accuracy"]) == 9 and "suffix_priors" not in numbers
         assert [r["domain"] for r in numbers["brand_examples"]][:2] == ["google.com", "g0ogle.com"]
+        assert set(numbers["better_data"]["hybrid"]) == {"phiusiil_only", "phiusiil_plus_fixes"}
         assert client.get("/").status_code == 200
