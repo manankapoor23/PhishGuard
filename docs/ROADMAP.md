@@ -12,7 +12,7 @@
 | 7 | Robustness: original vs modified phishing URLs, model not retrained | ✅ | 11 | [07](guide/07_robustness.md) |
 | 8 | Project website: link checker with explanations and honest warnings | ✅ | – | [08](guide/08_website.md) |
 | 7b | Better training data: does it fix the real-world failures? (lab GPU) | ✅ | 12, 13 | [09](guide/09_better_data.md), [10](guide/10_extra_checks.md) |
-| 9 | Report and slides | next | | |
+| 9 | Report and slides | ✅ draft | 12, 13 | [report](report/REPORT.md) |
 
 ## Headline results (test accuracy, mean ± sd over 5 site-owner splits)
 | Model | Input | Accuracy |
