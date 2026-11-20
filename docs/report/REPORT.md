@@ -1,6 +1,6 @@
 # PhishGuard: Can a Computer Spot a Fake Website from Its Link?
 
-**Machine learning course project, 2026.** Manan, Shaurya and Abhishek
+**Machine learning course project, 2026.** Manan, Shaurya and Abhishek<br>
 Code and data: https://github.com/AIShaurya777/PhishGuard · A more technical version of this report: [`REPORT_detailed.md`](REPORT_detailed.md)
 
 ---
