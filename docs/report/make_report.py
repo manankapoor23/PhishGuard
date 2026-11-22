@@ -29,9 +29,9 @@ COVER = {
     "title": "PhishGuard: What Does a Phishing URL Detector Really Learn?",
     "subtitle": "Machine Learning Project Report",
     "students": [("Manan Kapoor", "1024030467"), ("Shaurya Sangwan", "1024030462"), ("Abhishek Batra", "1024030463")],
-    "supervisor": "[Supervisor Name]",
-    "department": "[Department]",
-    "institute": "[Institute]",
+    "supervisor": "Mahak Gambhir",
+    "department": "",
+    "institute": "TIET",
     "date": "November 2026",
 }
 
@@ -135,7 +135,7 @@ def cover_html():
 <p class="t">{c['title']}</p><p class="s">{c['subtitle']}</p>
 <p style="font-weight:bold;margin-bottom:6pt">Submitted by</p>
 <table><tr><th>Name</th><th>Roll number</th></tr>{rows}</table>
-<p class="meta">Under the supervision of <b>{c['supervisor']}</b><br>{c['department']}<br>{c['institute']}<br>{c['date']}</p>
+<p class="meta">Under the supervision of <b>{c['supervisor']}</b><br>{c['department'] + '<br>' if c['department'] else ''}{c['institute']}<br>{c['date']}</p>
 </section>"""
 
 
