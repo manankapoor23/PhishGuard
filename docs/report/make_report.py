@@ -28,7 +28,7 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 COVER = {
     "title": "PhishGuard: What Does a Phishing URL Detector Really Learn?",
     "subtitle": "Machine Learning Project Report",
-    "students": [("Manan Kapoor", "[Roll No.]"), ("Shaurya", "[Roll No.]"), ("Abhishek", "[Roll No.]")],
+    "students": [("Manan Kapoor", "1024030467"), ("Shaurya Sangwan", "1024030462"), ("Abhishek Batra", "1024030463")],
     "supervisor": "[Supervisor Name]",
     "department": "[Department]",
     "institute": "[Institute]",
